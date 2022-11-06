@@ -54,14 +54,17 @@
                             http_response_code(200);
                         break;
                     }
-                    $service = ucfirst($url[0]).'Service'; // SERVICE
+                    if (isset($url[0]))
+                        $service = ucfirst($url[0]).'Service'; // SERVICE
+                    else
+                        throw new Exception('Rota está vazio!');
+
                     $obj  = json_decode(file_get_contents('php://input'),true); // DATA 
                     
                     if (class_exists($service)) 
                         $stdClass = new $service;  // NEW CLASS
-                    else{
-                        throw new Exception('Rota "'.ucfirst($url[0]).'" Incorreto!');
-                    }
+                    else
+                        throw new Exception('Rota "'.ucfirst($url[0]).'" Incorreto!'); 
 
                     $response = $stdClass->$method($verified_developer,$verified_customer,$obj); // CHAMADA DA CLASSE PELO METHODO.  
                     echo json_encode(array('status'=>'success','data'=>$response)); // RETORNO DA RESPOSTA  :: SUCESSO ::
