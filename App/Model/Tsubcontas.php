@@ -5,4 +5,6 @@ class Tsubcontas extends Record
 {
     const TABLENAME = 'tsubcontas';
     const TABLEPREFIX = 'sub_';
+
+    use Token;
 }

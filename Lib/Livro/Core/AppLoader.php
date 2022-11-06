@@ -11,7 +11,6 @@ use Exception;
 class AppLoader
 {
     protected $directories;
-    
     /**
      * Adiciona um diretório a ser vasculhado
      */
@@ -19,7 +18,6 @@ class AppLoader
     {
         $this->directories[] = $directory;
     }
-    
     /**
      * Registra o AppLoader
      */
@@ -27,14 +25,12 @@ class AppLoader
     {
         spl_autoload_register(array($this, 'loadClass'));
     }
-    
     /**
      * Carrega uma classe
      */
     public function loadClass($class)
     {
         $folders = $this->directories;
-        
         foreach ($folders as $folder)
         {
             if (file_exists("{$folder}/{$class}.php"))

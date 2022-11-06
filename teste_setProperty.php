@@ -54,17 +54,17 @@
 	$criterio->setProperty('valor', 'car_vpb_taxa');
 
 	//Chama o Loader passando os critérios
-	$contas = $repositorio->load($criterio);
+	//$contas = $repositorio->load($criterio);
 	echo "<pre>";
 	
-	print_r($contas);
+	//print_r($contas);
 	
 	///Consulta simples em tsubcontas onde busta todos os registros da tabela
 	$subconta = new Tsubcontas;
 	$vet = $subconta->all();
 	
 
-	print_r($vet);
+	//print_r($vet);
 	
 	//Fechando a transação do banco de dados
 	Transaction::close();

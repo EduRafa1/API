@@ -16,6 +16,7 @@ class Connection
 		else
 		{
 			throw new Exception("Arquivo {$name} não encontrado");
+			
 		}
 		$user = isset($db['user']) ? $db['user'] : null;
 		$pass = isset($db['pass']) ? $db['pass'] : null;
@@ -26,10 +27,10 @@ class Connection
 		switch ($type) {
 			case 'mysql':
 				//$port = isset($db['port']) ? $db['port'] : '3306';
-				echo "mysql:host={$host};dbname={$name}";
-				echo ' -- '.$user . ' - ' . $pass;
+				//echo "mysql:host={$host};dbname={$name}";
+				//echo ' -- '.$user . ' - ' . $pass;
 				$conn = new PDO("mysql:host={$host};port={$port};dbname={$name}", $user, $pass);
-				var_dump($conn);
+				///var_dump($conn);
 				break;
 
 			case 'pgsql':
@@ -39,7 +40,7 @@ class Connection
 			case 'sqlite':
 				break;
 		}
-		///$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		return $conn;
 	}
 

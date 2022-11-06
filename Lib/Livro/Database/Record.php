@@ -183,25 +183,35 @@ abstract class Record implements RecordInterface
      * Recupera (retorna) um objeto da base de dados pelo seu ID
      * @param $id = ID do objeto
      */
-    public function load($id)
+    public function load($id,$prefix = null)
     {   
         // instancia instrução de SELECT
+
         $sql = "SELECT * FROM {$this->getEntity()}";
-        $sql .= " WHERE {$this->PrefixCodigo()}codigo = " . (int) $id;
+        
+        //Prefix modifica o indice da busca.
+        
+        $identification = $prefix != '' ? $prefix : $this->PrefixCodigo()."codigo";
+        
+        $sql .= " WHERE {$identification} = '{$id}'";
+    
         // obtém transação ativa
         if ($conn = Transaction::get())
         {
             // cria mensagem de log e executa a consulta
-            Transaction::log($sql);
-            $result= $conn->query($sql);
-            
-            // se retornou algum dado
-            if ($result)
-            {
-                // retorna os dados em forma de objeto
-                $object = $result->fetchObject(get_class($this));
+            try {
+                $result= $conn->query($sql);
+                if ($result)
+                {
+                    // retorna os dados em forma de objeto
+                    $object = $result->fetchObject(get_class($this));
+                }
+
+            } catch (Exception $e) {
+                throw new Exception('Erro na Consulta do banco de dados. Class = Record->Load :: Erro :: ');
             }
-            return $object;
+
+            return $object; 
         }
         else
         {
@@ -272,7 +282,6 @@ abstract class Record implements RecordInterface
     {
         $classname = get_called_class();
         $rep = new Repository($classname);
-        
         return $rep->load(new Criteria);
        
          

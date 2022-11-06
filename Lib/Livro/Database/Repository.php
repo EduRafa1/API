@@ -69,9 +69,7 @@ final class Repository
             $sql.= " * ";
 
 
-
         $sql .= " FROM " . constant($this->activeRecord.'::TABLENAME');
-        
         $join = $criteria->getProperty('join');
         if ($join != '') {
             foreach ($join as $chave => $valor) {
