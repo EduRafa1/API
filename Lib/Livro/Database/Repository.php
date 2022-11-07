@@ -110,7 +110,6 @@ final class Repository
             }
             
         }
-         echo $sql;
         // obtém transação ativa
         if ($conn = Transaction::get())
         {
