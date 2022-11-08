@@ -89,11 +89,15 @@ abstract class Record implements RecordInterface
     *   Retorna o nome da coluda indice código
     */
     public function PrefixCodigo(){
-        
-
         $class = get_class($this);
-        //retorna a constante da classe TABLECODIGO
         return constant("{$class}::TABLEPREFIX");
+    }
+    /**
+     * Retorna o valor da constant CheckArray
+     */
+    private function getCheckArray(){
+        $class = get_class($this);
+        return constant("{$class}::CHECKARRAY");
     }
     /**
      * Retorna o nome da entidade (tabela)
@@ -102,11 +106,29 @@ abstract class Record implements RecordInterface
     {
         // obtém o nome da classe
         $class = get_class($this);
-        
-        // retorna a constante de classe TABLENAME
+
         return constant("{$class}::TABLENAME");
     }
-    
+    public function verifyCheckArray($data)
+    {
+        $response = [];
+        //Pega variavel CHECKARRAY
+        $CheckArray = $this->getCheckArray();
+        foreach ($CheckArray as $chave => $valor) {
+            if (!array_key_exists($valor,$data) || $data[$valor] == '') { // Valores Incorretos no Array Recebido
+                $response['error']['Message'] = '';
+                $response['error']['Validation']['data'][] = $valor;
+            }
+        }
+        //Verifica o response pro retorno Sucesso ou Error.
+        if (count($response) <= 0) 
+            $response['sucesso'] = 'S'; // Tudo OK
+
+        if (!isset($response['sucesso'])) 
+            $response['error']['Message'] = utf8_encode('Dados para inserção incorreto. Verifique o Validation para mais detalhe!');
+        
+        return $response;
+    }
     /**
      * Preenche os dados do objeto com um array
      */

@@ -6,9 +6,8 @@
     use Livro\Database\Repository;
     use Livro\Database\Criteria;
     
-    $url = isset($_GET['url']) ? explode('/', $_GET['url']) : NULL;  //Verifica se existe url
-
-    $api = $url != NULL ? $url[0] : 'error'; // Verifica e atribui o valor da URL na variavel API;
+    $url = isset($_GET['url']) ? explode('/', $_GET['url']) : NULL;  
+    $api = $url != NULL ? $url[0] : 'error'; 
     if ($api === 'api') {
         array_shift($url);
         //AUTOLOADER NAMESPACE
@@ -27,19 +26,17 @@
         try {
             ///Abrindo transação com o banco de dados
             Transaction::open('banco_bol_dev');    
-            //Pegando dados do Cabeçalho
             $headers = getallheaders();
-            //Iniciando o banco de desenvolvedores
             $developer = new Desenvolvedores;
             $developer->headers = $headers;
-            //Verifica chave token do desenvolvedor
             $verified_developer = $developer->CheckToken('Authorization','dev_token');
             if ($verified_developer != 'N') {
-                //Iniciando banco de Cliente
                 $client = new Tsubcontas;    
                 $client->headers = $headers;
-                //Verifica chave token do cliente do desenvolvedor
+               
                 $verified_customer = $client->CheckToken('TokenCliente','sub_vpbanktoken');
+                //Fechando a transação do banco de dados
+                Transaction::close();
                 if ($verified_customer != 'N') {
                     //Tokens Verificados
                     $method = strtoupper($_SERVER['REQUEST_METHOD']); // GET - POST - PUT - DELETE  
@@ -73,8 +70,6 @@
                     throw new Exception('Token do Cliente incorreto!');
             }else
                 throw new Exception('Token de Authorization Incorreto!');
-            //Fechando a transação do banco de dados
-            Transaction::close();
 
         } catch (Exception $e) {
             http_response_code(404);

@@ -1,10 +1,24 @@
 <?php 
-
+ use Livro\Database\Transaction;
 	class ClienteService 
 	{
+		
 		public function POST($dev,$cliente,$data){
-			return $data;
+			Transaction::open('banco_nfe_dev'); 
+			$tempresanfe = new TempresaNFE;
+			
+			$checkarray = $tempresanfe->verifyCheckArray($data['cliente']);
+
+			if (isset($checkarray['error']))
+				return $checkarray['error'];
+			
+			Transaction::close(); 
 		}
+
+
+
+
+
 		public function GET($dev,$cliente,$data){
 			return $data;
 		}
